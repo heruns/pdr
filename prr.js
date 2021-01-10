@@ -129,7 +129,7 @@
     addLoading(el) {
       const position = getStyle(el, "position");
       if (position !== "absolute" && position !== "fixed") {
-        el.classList.add("prr-loading-parent--relative");
+        el.classList.add("prr-loading-parent-relative");
       }
       const mask = this.createLoadingMask();
       const maskStyle = this.getMaskStyle(el);
@@ -141,7 +141,7 @@
       el._prrMask = mask;
     },
     removeLoading(el) {
-      el.classList.remove("prr-loading-parent--relative");
+      el.classList.remove("prr-loading-parent-relative");
       el._prrMask && el.removeChild(el._prrMask);
     },
   };
@@ -238,13 +238,13 @@
         .prr-no-pointer-events {
           pointer-events: none !important;
         }
-        .prr-loading-parent--relative {
+        .prr-loading-parent-relative {
           position: relative !important;
         }
         .prr-loading-mask {
           position: absolute;
           z-index: 2000;
-          background-color: rgba(255, 255, 255, .9);
+          background-color: rgba(255, 255, 255, .8);
           margin: 0;
           top: 0;
           right: 0;

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./common.css" />
+  </head>
+  <body>
+    <!-- 全局监听请求 -->
+    <button class="button" id="btn">click me</button>
+    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
+    <script src="../prr.js"></script>
+    <script>
+      prr.setOptions({
+        loading: false,
+        onRequest(target, options) {
+          console.log(target, "请求开始");
+        },
+        onResponse(target, options) {
+          console.log(target, "请求结束");
+        },
+      });
+      axios.defaults.baseURL =
+        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/prr";
+      const button = document.getElementById("btn");
+      button.addEventListener("click", function (e) {
+        axios.get("/two-seconds");
+      });
+    </script>
+  </body>
+</html>

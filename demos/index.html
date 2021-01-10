@@ -8,39 +8,37 @@
       rel="stylesheet"
       href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
     />
+    <link rel="stylesheet" href="./common.css" />
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
       body {
         padding: 50px;
-      }
-      .box {
-        width: 100px;
-        height: 100px;
-        text-align: center;
-        cursor: pointer;
-        background-color: #f00;
-      }
-      .prr-requesting {
-        opacity: 0.5;
       }
     </style>
   </head>
   <body>
-    <!-- 全局监听请求 -->
-    <button id="btn">click me</button>
     <div id="app">
+      <iframe-demo src="./demo1.html"></iframe-demo>
       <!-- 指令手动设置请求开始和结束，可用于处理多个请求的情况 -->
-      <button v-prr.loading="loading" @click="handleClick">
-        测试指令 {{loading}}
-      </button>
+      <div class="container">
+        <button class="button" v-prr.loading="loading" @click="handleClick">
+          测试指令 {{loading}}
+        </button>
+      </div>
       <!-- 指令手动指定目标，可用于 selectors 不匹配的情况 -->
-      <div v-prr.loading @click="fetchJs" class="box">可点击区域</div>
+      <!-- TODO: 改为文件下载 demo -->
+      <div class="container">
+        <div v-prr.loading @click="fetchJs" class="box">可点击区域</div>
+      </div>
       <!-- 使用 element ui 的按钮组件 -->
-      <el-button type="primary" @click="fetchJs">click me</el-button>
+      <div class="container">
+        <el-button type="primary" @click="fetchJs">click me</el-button>
+      </div>
+    </div>
+    <!-- iframe-demo 组件模板 -->
+    <div type="x-template" id="iframe-demo" style="display: none">
+      <div class="iframe-demo">
+        <iframe ref="iframe" :src="src" frameborder="0" width="100%"></iframe>
+      </div>
     </div>
     <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
