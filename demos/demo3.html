@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>demo3</title>
+    <link rel="stylesheet" href="./common.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <!-- code start:lang:html -->
+      <!-- 使用 element ui 的按钮组件 -->
+      <el-button type="primary" @click="fetch">click me</el-button>
+      <!-- code end -->
+    </div>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
+    <script src="../prr.js"></script>
+    <script>
+      axios.defaults.baseURL =
+        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/prr";
+      // code start:lang:js
+      prr.setOptions({
+        loading: false,
+        onRequest(target, options) {
+          // 处理 element ui 的按钮
+          if (target.classList.contains("el-button")) {
+            target.classList.add("is-loading");
+            const loading = document.createElement("i");
+            loading.className = "el-icon-loading";
+            target.insertBefore(
+              loading,
+              target.children.length > 0 ? target.children[0] : null
+            );
+          }
+        },
+        onResponse(target, options) {
+          if (target.classList.contains("el-button")) {
+            target.classList.remove("is-loading");
+            const loading = document.querySelector(".el-icon-loading");
+            loading && target.removeChild(loading);
+          }
+        },
+      });
+
+      new Vue({
+        el: "#app",
+        data: {
+          loading: false,
+        },
+        methods: {
+          fetch() {
+            axios.get("/two-seconds");
+          },
+        },
+      });
+      // code end:lang:js
+    </script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>demo2</title>
+    <link rel="stylesheet" href="./common.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- code start:lang:html -->
+      <!-- 指令手动设置请求开始和结束，可用于处理多个请求的情况 -->
+      <div class="container">
+        <button class="button" v-prr.loading="loading" @click="handleClick">
+          测试指令 {{loading}}
+        </button>
+      </div>
+      <!-- 指令手动指定目标，可用于 selectors 不匹配的情况 -->
+      <!-- TODO: 改为文件下载 demo -->
+      <div class="container">
+        <div v-prr.loading @click="fetch" class="box">点击发送请求</div>
+      </div>
+      <!-- code end -->
+    </div>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
+    <script src="../prr.js"></script>
+    <script>
+      axios.defaults.baseURL =
+        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/prr";
+      // code start:lang:js
+      prr.setOptions({
+        loading: false
+      });
+      new Vue({
+        el: "#app",
+        data: {
+          loading: false,
+        },
+        methods: {
+          handleClick(e) {
+            this.loading = true;
+            axios
+              .get("/one-second")
+              .then(() => axios.get("/two-seconds"))
+              .then(() => {
+                this.loading = false;
+              });
+          },
+          fetch() {
+            axios.get("/two-seconds");
+          },
+        },
+      });
+      // code end
+    </script>
+  </body>
+</html>
