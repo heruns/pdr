@@ -1,5 +1,7 @@
 # prr —— 防止用户多次点击发送重复请求的工具
 
+## demo 地址：[https://heruns.github.io/prr/demos/](https://heruns.github.io/prr/demos/)
+
 ## 功能
 
 - 不依赖 axios，自动监听 ajax 请求的发送和响应，防止重复请求
