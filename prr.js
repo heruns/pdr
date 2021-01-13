@@ -254,18 +254,18 @@
       }
     },
   };
-  // 获取元素 data-* 属性中的值
+  // 获取元素 data-prr-* 属性中的值
   function getDataOptions(el) {
     const options = {};
     const dataset = el.dataset;
-    if (dataset.opacity) {
-      options.opacity = Number(dataset.opacity);
+    if (dataset.prrOpacity) {
+      options.opacity = Number(dataset.prrOpacity);
     }
-    if (dataset.loading) {
-      options.loading = dataset.loading === "true";
+    if (dataset.prrLoading) {
+      options.loading = dataset.prrLoading === "true";
     }
-    if (dataset.loadingText) {
-      options.loadingText = dataset.loadingText;
+    if (dataset.prrLoadingText) {
+      options.loadingText = dataset.prrLoadingText;
     }
     return options;
   }
@@ -307,6 +307,14 @@
     loadingManager.removeLoading(target);
     opacityManager.restoreOpacity(target);
     globalOptions.onResponse.call(null, target, options);
+  }
+  // 手动调用方法，表示元素开始请求
+  function start(el, options) {
+    onRequest(el, normalizeRequestOptions(el, options));
+  }
+  // 手动调用方法，表示元素请求完成
+  function stop(el, options) {
+    onResponse(el, options);
   }
 
   // 获取发起请求的dom
@@ -439,6 +447,10 @@
       userOptions = userOptions || {};
       Object.assign(globalOptions, userOptions);
     },
+    // 手动调用方法，表示元素开始请求
+    start: start,
+    // 手动调用方法，表示元素请求完成
+    stop: stop,
     // 指令
     directive,
     // 通过 Vue.use 使用该工具时调用
@@ -456,8 +468,4 @@
 
   init();
   window.prr = preventRepetitiveRequest;
-  // 检测到 Vue 时自动注册
-  if (window.Vue) {
-    window.Vue.use(preventRepetitiveRequest);
-  }
 })();

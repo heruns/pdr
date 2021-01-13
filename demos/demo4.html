@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>demo4</title>
+    <link rel="stylesheet" href="./common.css" />
+  </head>
+  <body>
+    <!-- code start:lang:html -->
+    <button class="button">提交</button>
+    <!-- code end -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
+    <script src="../prr.js"></script>
+    <script>
+      axios.defaults.baseURL =
+        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/prr";
+      // code start:lang:js
+      prr.setOptions({
+        loading: false,
+        selectors: [],
+      });
+
+      const button = document.querySelector(".button");
+      button.addEventListener("click", function (e) {
+        prr.start(button, {
+          opacity: 0.5,
+        });
+        axios
+          .get("/one-second")
+          .then(() => axios.get("/two-seconds"))
+          .then(() => {
+            prr.stop(button);
+          });
+      });
+      // code end
+    </script>
+  </body>
+</html>
