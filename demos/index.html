@@ -3,12 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>防止重复点击发送请求</title>
+    <title>防止用户多次点击发送重复请求</title>
     <link rel="stylesheet" href="./common.css" />
-    <link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.4.1/styles/github.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.4.1/styles/github.min.css"
+      rel="stylesheet"
+    />
     <style>
       body {
         padding: 50px;
+      }
+      .iframe-demo {
+        border: 1px solid #ebebeb;
+      }
+      .iframe-demo + .iframe-demo {
+        margin-top: 20px;
+      }
+      .iframe-demo-content {
+        padding: 20px;
+      }
+      .snippet-type {
+        margin: 12px 0;
+      }
+      .toggle-button {
+        border-top: 1px solid #ebebeb;
+        cursor: pointer;
+        padding: 10px 0;
+        text-align: center;
+      }
+      .toggle-button:hover {
+        color: #11a560;
+        background-color: #f9fafc;
       }
     </style>
   </head>
@@ -17,22 +42,37 @@
       <iframe-demo src="./demo1.html"></iframe-demo>
       <iframe-demo src="./demo2.html"></iframe-demo>
       <iframe-demo src="./demo3.html"></iframe-demo>
-
     </div>
+
     <!-- iframe-demo 组件模板 -->
     <div type="x-template" id="iframe-demo" style="display: none">
       <div class="iframe-demo">
-        <iframe ref="iframe" :src="src" frameborder="0" width="100%" :height="height"></iframe>
-        <div class="snippets">
-          <div class="snippet" v-for="(snippet, index) in snippets" :key="index">
-            <h3>{{snippet.info.lang}}:</h3>
-            <highlightjs :language="snippet.info.lang" :code="snippet.code" />
+        <div class="iframe-demo-content">
+          <iframe
+            ref="iframe"
+            :src="src"
+            width="100%"
+            :height="height"
+            frameborder="0"
+          ></iframe>
+          <div class="snippets" v-show="showCode">
+            <div
+              class="snippet"
+              v-for="(snippet, index) in snippets"
+              :key="index"
+            >
+              <h3 class="snippet-type">{{snippet.info.lang}}:</h3>
+              <highlightjs :language="snippet.info.lang" :code="snippet.code" />
+            </div>
           </div>
+        </div>
+        <div class="toggle-button" @click="toggleShow">
+          {{ showCode ? '收起' : '查看代码' }}
         </div>
       </div>
     </div>
-    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.4.1/languages/javascript.min.js"></script>
     <script src="../prr.js"></script>

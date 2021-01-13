@@ -78,12 +78,11 @@ prr.setOptions({
 - 通过重写 `XMLHttpRequest.prototype.send` 方法和监听 xhr 对象的 `loadend` 事件实现请求监听
 - 通过 `window.event` 对象获取触发请求的元素
 - 通过给请求元素设置 `pointer-events:none`，防止用户多次点击导致的重复请求
+- 设置不透明度时涉及到修改行内样式，即使是行内样式也要使用 `el.style.setProperty("opacity", opacity, "important")` 保证样式优先级是最高的，同时通过 `el.style.getPropertyPriority` 获取原样式的优先级，以便后面恢复
 
 ## 限制
 
 - 当元素会触发连续请求时，比如点击按钮发起一个请求，请求完成后再通过拿到的数据去调另一个接口这种情况，目前只能通过 vue 指令来处理
-
-## [demo](./demos/index.html) （待完善）
 
 ## TODO
 

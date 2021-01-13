@@ -2,54 +2,99 @@
   // 全局参数
   const globalOptions = {
     loading: true, // 是否添加 loading
+    loadingText: "", // 请求时的文字提示
+    // opacity: 1, // 请求时设置的不透明度
     selectors: ["button"], // 需要全局统一处理请求的选择器列表
     eventTypes: ["click"], // 需要全局统一处理请求的事件列表
     onRequest(target, options) {}, // 请求发起的钩子
     onResponse(target, options) {}, // 请求结束的钩子
   };
 
+  // dom 相关的数据存储
+  const elementDataStore = {
+    elements: [],
+    set(el, key, data) {
+      const index = this.getIndex(el);
+      if (index > -1) {
+        const obj = this.elements[index].data;
+        obj[key] = data;
+      } else {
+        const obj = {
+          el,
+          data: {
+            [key]: data,
+          },
+        };
+        this.elements.push(obj);
+      }
+    },
+    remove(el, key) {
+      const index = this.getIndex(el);
+      if (index === -1) return;
+      if (!key) {
+        this.elements.splice(index, 1);
+      } else {
+        const obj = this.elements[index].data;
+        delete obj[key];
+        const keysLength = Object.keys(obj).length;
+        if (keysLength === 0) {
+          this.elements.splice(index, 1);
+        }
+      }
+    },
+    getIndex(el, key) {
+      const index = this.elements.findIndex((item) => item.el === el);
+      if (!key) {
+        return index;
+      } else if (index > -1) {
+        return this.getData(el, key) ? index : -1;
+      }
+      return -1;
+    },
+    getData(el, key) {
+      const index = this.getIndex(el);
+      if (index === -1) {
+        return null;
+      }
+      const data = this.elements[index].data;
+      return key ? data[key] : data;
+    },
+    has(el, key) {
+      return this.getIndex(el, key) > -1;
+    },
+  };
   // 管理指令指定的dom
   const directiveElStore = {
-    elements: [],
+    key: "directiveOptions",
     add(el, options) {
-      this.elements.push({
-        el,
-        options,
-      });
-      if (options.requesting) {
+      elementDataStore.set(el, this.key, options);
+      if (options.fetching) {
         const requestOptions = normalizeRequestOptions(el);
         onRequest(el, requestOptions);
       }
     },
     remove(el) {
-      const index = this.getIndex(el);
-      if (index !== -1) {
-        this.elements.splice(index, 1);
-      }
+      return elementDataStore.remove(el, this.key);
     },
     update(el, options) {
       if (!this.has(el)) return;
       const oldOptions = this.getOptions(el);
       // 对比新旧值，判断是请求开始还是请求结束
-      if (oldOptions.requesting && !options.requesting) {
+      if (oldOptions.fetching && !options.fetching) {
         onResponse(el, normalizeRequestOptions(el));
-      } else if (!oldOptions.requesting && options.requesting) {
+      } else if (!oldOptions.fetching && options.fetching) {
         onRequest(el, normalizeRequestOptions(el));
       }
       this.setOptions(el, options);
     },
     getIndex(el) {
-      return this.elements.findIndex((item) => item.el === el);
+      return elementDataStore.getIndex(el, this.key);
     },
     getOptions(el) {
-      const index = this.getIndex(el);
-      return index !== -1 ? this.elements[index].options : null;
+      return elementDataStore.getData(el, this.key);
     },
     setOptions(el, options) {
-      const index = this.getIndex(el);
-      if (index !== -1) {
-        this.elements[index].options = options;
-      }
+      elementDataStore.set(el, this.key, options);
     },
     has(el) {
       return this.getIndex(el) > -1;
@@ -59,14 +104,28 @@
   function normalizeDirectiveOptions(binding) {
     const options = {
       manual: false, // 是否手动
-      requesting: false, // 是否在请求中，仅当 manual 为 true 时有效
+      fetching: false, // 是否在请求中，仅当 manual 为 true 时有效
     };
-    if (binding.modifiers.loading) {
-      options.loading = true;
-    }
     if (typeof binding.value === "boolean") {
-      options.requesting = binding.value;
+      options.fetching = binding.value;
       options.manual = true;
+    } else if (typeof binding.value === "object") {
+      const bindingValue = binding.value;
+      const hasOwn = (prop) =>
+        Object.prototype.hasOwnProperty.call(bindingValue, prop);
+      if (hasOwn("fetching")) {
+        options.fetching = bindingValue.fetching;
+        options.manual = true;
+      }
+      if (hasOwn("loading")) {
+        options.loading = Boolean(bindingValue.loading);
+      }
+      if (hasOwn("loadingText")) {
+        options.loadingText = String(bindingValue.loadingText);
+      }
+      if (hasOwn("opacity")) {
+        options.opacity = String(bindingValue.opacity);
+      }
     }
     return options;
   }
@@ -84,8 +143,13 @@
     },
   };
 
+  // 获取元素某个样式
+  function getStyle(el, prop) {
+    return document.defaultView.getComputedStyle(el).prop;
+  }
   // 管理 loading
   const loadingManager = {
+    key: "loadingMask",
     createLoadingMask() {
       const mask = document.createElement("div");
       mask.className = "prr-loading-mask";
@@ -126,7 +190,7 @@
         circular.style.height = minSize + "px";
       }
     },
-    addLoading(el) {
+    addLoading(el, loadingText) {
       const position = getStyle(el, "position");
       if (position !== "absolute" && position !== "fixed") {
         el.classList.add("prr-loading-parent-relative");
@@ -138,44 +202,110 @@
       });
       this.setCircularSize(el, mask);
       el.appendChild(mask);
-      el._prrMask = mask;
+      if (loadingText) {
+        const circular = mask.querySelector(".prr-circular");
+        // 如果空间不足就不显示文字
+        if (mask.clientHeight - circular.clientHeight < 26) return;
+        this.addLoadingText(mask, loadingText);
+      }
+      elementDataStore.set(el, this.key, mask);
+    },
+    addLoadingText(mask, loadingText) {
+      const text = document.createElement("div");
+      text.className = "prr-loading-text";
+      text.textContent = loadingText;
+      mask.querySelector(".prr-loading-spinner").appendChild(text);
     },
     removeLoading(el) {
       el.classList.remove("prr-loading-parent-relative");
-      el._prrMask && el.removeChild(el._prrMask);
+      const mask = elementDataStore.getData(el, this.key);
+      if (mask) {
+        el.removeChild(mask);
+        elementDataStore.remove(el, this.key);
+      }
     },
   };
+  // 管理不透明度
+  const opacityManager = {
+    key: "originalOpacity",
+    setOpacity(el, opacity) {
+      // 将原来内联样式中的 opacity 属性值和优先级存起来
+      const inlineOpacity = el.style.opacity;
+      if (inlineOpacity) {
+        const originalOpacity = {
+          value: inlineOpacity,
+          priority: el.style.getPropertyPriority("opacity"),
+        };
+        elementDataStore.set(el, this.key, originalOpacity);
+      }
+      el.style.setProperty("opacity", opacity, "important");
+    },
+    restoreOpacity(el) {
+      el.style.removeProperty("opacity");
+      const originalOpacity = elementDataStore.getData(el, this.key);
+      elementDataStore.remove(el, this.key);
+      // 恢复原来内联样式中的 opacity 属性值和优先级
+      if (originalOpacity) {
+        el.style.setProperty(
+          "opacity",
+          originalOpacity.value,
+          originalOpacity.priority
+        );
+      }
+    },
+  };
+  // 获取元素 data-* 属性中的值
+  function getDataOptions(el) {
+    const options = {};
+    const dataset = el.dataset;
+    if (dataset.opacity) {
+      options.opacity = Number(dataset.opacity);
+    }
+    if (dataset.loading) {
+      options.loading = dataset.loading === "true";
+    }
+    if (dataset.loadingText) {
+      options.loadingText = dataset.loadingText;
+    }
+    return options;
+  }
   // 转换 onRequest 的参数
   function normalizeRequestOptions(el, options) {
     const defaults = {
       loading: globalOptions.loading,
+      loadingText: globalOptions.loadingText,
+      opacity: globalOptions.opacity,
       type: "manual",
       xhr: null,
     };
     const requestOptions = Object.assign(defaults, options);
     if (directiveElStore.has(el)) {
       const directiveOptions = directiveElStore.getOptions(el);
-      if (Object.prototype.hasOwnProperty.call(directiveOptions, "loading")) {
-        requestOptions.loading = directiveOptions.loading;
-      }
+      Object.assign(requestOptions, directiveOptions);
+    } else {
+      const dataOptions = getDataOptions(el);
+      Object.assign(requestOptions, dataOptions);
     }
     return requestOptions;
   }
   // 发起请求时的回调函数
   function onRequest(target, options) {
-    // TODO: 自动设置透明度
     target.classList.add("prr-no-pointer-events");
-    target.classList.add("prr-requesting");
+    target.classList.add("prr-fetching");
     if (options.loading) {
-      loadingManager.addLoading(target);
+      loadingManager.addLoading(target, options.loadingText);
+    }
+    if (options.opacity) {
+      opacityManager.setOpacity(target, options.opacity);
     }
     globalOptions.onRequest.call(null, target, options);
   }
   // 请求结束时的回调函数
   function onResponse(target, options) {
     target.classList.remove("prr-no-pointer-events");
-    target.classList.remove("prr-requesting");
+    target.classList.remove("prr-fetching");
     loadingManager.removeLoading(target);
+    opacityManager.restoreOpacity(target);
     globalOptions.onResponse.call(null, target, options);
   }
 
@@ -210,7 +340,7 @@
           directiveElStore.getOptions(target).manual
         );
       };
-      // 当不存在目标或目标由指令指定且是手动设置 requesting 值时不做处理
+      // 当不存在目标或目标由指令指定且是手动设置 fetching 值时不做处理
       if (!target || isDirectiveManualEl()) {
         return xhrSend.apply(this, args);
       }
@@ -228,12 +358,9 @@
     XMLHttpRequest.prototype.send._isReset = true;
   }
 
-  // 获取元素某个样式
-  function getStyle(el, prop) {
-    return document.defaultView.getComputedStyle(el).prop;
-  }
   // 添加相关样式
   function addStyle() {
+    const primaryColor = "#11A560";
     const STYLE_TEXT = `
         .prr-no-pointer-events {
           pointer-events: none !important;
@@ -244,7 +371,7 @@
         .prr-loading-mask {
           position: absolute;
           z-index: 2000;
-          background-color: rgba(255, 255, 255, .8);
+          background-color: rgba(255, 255, 255, .9);
           margin: 0;
           top: 0;
           right: 0;
@@ -269,8 +396,13 @@
           stroke-dasharray: 90, 150;
           stroke-dashoffset: 0;
           stroke-width: 2;
-          stroke: #11A560;
+          stroke: ${primaryColor};
           stroke-linecap: round;
+        }
+        .prr-loading-text {
+          color: ${primaryColor};
+          margin: 3px 0;
+          font-size: 14px;
         }
         @keyframes prr-loading-rotate {
           100% {

@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>demo1</title>
     <link rel="stylesheet" href="./common.css" />
+    <style>
+      .button {
+        opacity: 1 !important;
+      }
+    </style>
   </head>
   <body>
     <!-- code start:lang:html -->
     <!-- 全局监听请求 -->
-    <button class="button">click me</button>
+    <button class="button">提交</button>
     <!-- code end -->
-    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
     <script src="../prr.js"></script>
     <script>
       axios.defaults.baseURL =
@@ -19,15 +24,10 @@
       // code start:lang:js
       prr.setOptions({
         loading: false,
-        onRequest(target, options) {
-          console.log(target, "请求开始");
-        },
-        onResponse(target, options) {
-          console.log(target, "请求结束");
-        },
+        opacity: 0.5,
       });
-      const button = document.querySelector(".button");
-      button.addEventListener("click", function (e) {
+
+      document.querySelector(".button").addEventListener("click", function (e) {
         axios.get("/two-seconds");
       });
       // code end

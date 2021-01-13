@@ -33,13 +33,3 @@
 .container {
   margin-top: 20px;
 }
-.box {
-  width: 100px;
-  height: 100px;
-  text-align: center;
-  cursor: pointer;
-  background-color: #f00;
-}
-.prr-requesting {
-  opacity: 0.5;
-}

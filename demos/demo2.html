@@ -5,51 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>demo2</title>
     <link rel="stylesheet" href="./common.css" />
+    <style>
+      .box {
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+        background: #dcdfe6;
+        /* border: 1px solid #f00; */
+      }
+      .box-content {
+        width: 100%;
+        height: 100%;
+        line-height: 120px;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
     <div id="app">
       <!-- code start:lang:html -->
       <!-- 指令手动设置请求开始和结束，可用于处理多个请求的情况 -->
       <div class="container">
-        <button class="button" v-prr.loading="loading" @click="handleClick">
-          测试指令 {{loading}}
+        <button
+          class="button"
+          v-prr="{'fetching': fetching, 'opacity': 0.5}"
+          @click="fetch"
+        >
+          是否请求中：{{fetching}}
         </button>
       </div>
       <!-- 指令手动指定目标，可用于 selectors 不匹配的情况 -->
-      <!-- TODO: 改为文件下载 demo -->
       <div class="container">
-        <div v-prr.loading @click="fetch" class="box">点击发送请求</div>
+        <div
+          v-prr="{'loading': true, 'loadingText': '正在下载...'}"
+          @click="download"
+          class="box"
+        >
+          <div class="box-content">点击下载文件</div>
+        </div>
       </div>
       <!-- code end -->
     </div>
 
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
     <script src="../prr.js"></script>
     <script>
       axios.defaults.baseURL =
         "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/prr";
+      // 保存文件
+      function saveFile(data, fileName) {
+        const fileBlob = new Blob([data]); // 创建一个Blob对象
+        const a = document.createElement("a");
+        a.download = fileName;
+        a.href = URL.createObjectURL(fileBlob);
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
       // code start:lang:js
       prr.setOptions({
-        loading: false
+        loading: false,
       });
+
       new Vue({
         el: "#app",
         data: {
-          loading: false,
+          fetching: false,
         },
         methods: {
-          handleClick(e) {
-            this.loading = true;
+          fetch() {
+            this.fetching = true;
             axios
               .get("/one-second")
               .then(() => axios.get("/two-seconds"))
               .then(() => {
-                this.loading = false;
+                this.fetching = false;
               });
           },
-          fetch() {
+          download() {
             axios.get("/two-seconds");
+            // .then((res) => saveFile(res.data.desc, "prr.txt"));
           },
         },
       });

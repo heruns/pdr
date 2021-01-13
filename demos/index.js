@@ -9,6 +9,7 @@ const IframeDemo = {
     return {
       height: "",
       snippets: [],
+      showCode: false,
     };
   },
   created() {
@@ -16,6 +17,7 @@ const IframeDemo = {
     this.getCode();
   },
   mounted() {
+    // 加载完成后将当前 iframe 高度保存到 localStorage 中
     this.$refs.iframe.addEventListener("load", (e) => {
       const bodyHeight = this.$refs.iframe.contentDocument.body.scrollHeight;
       this.height = bodyHeight + 20 + "px";
@@ -23,6 +25,7 @@ const IframeDemo = {
     });
   },
   methods: {
+    // 获取示例代码
     async getCode() {
       const res = await axios.get(this.src);
       const code = res.data;
@@ -34,6 +37,7 @@ const IframeDemo = {
         info: {}, // 代码片段相关信息
       };
       let isSnippet = false; // 当前是否是代码片段的内容
+      // 判断当前行是否代码片段开始的标志
       const isSnippetStart = (lineCode) => {
         const codeStartRegexps = [
           /^\s*\<\!\-\-\s+code\sstart.*\s+\-\-\>/,
@@ -41,6 +45,7 @@ const IframeDemo = {
         ];
         return codeStartRegexps.some((regexp) => regexp.test(lineCode));
       };
+      // 判断当前行是否代码片段结束的标志
       const isSnippetEnd = (lineCode) => {
         const codeEndRegexps = [
           /^\s*\<\!\-\-\s+code\send\s+\-\-\>/,
@@ -92,14 +97,20 @@ const IframeDemo = {
       }
       this.snippets = snippets;
     },
+    toggleShow() {
+      this.showCode = !this.showCode;
+    },
+    // 获取 localStorage 中保存的所有 iframe 高度
     getStorageHeights() {
       const iframeHeightStr = window.localStorage.getItem("iframe_height");
       return iframeHeightStr ? JSON.parse(iframeHeightStr) : {};
     },
+    // 获取 localStorage 中保存的当前 iframe 高度
     getStorageHeight() {
       const iframeHeights = this.getStorageHeights();
       this.height = iframeHeights[this.src] || "";
     },
+    // 将当前 iframe 高度保存到 localStorage 中
     setStorageHeight(height) {
       const iframeHeights = this.getStorageHeights();
       iframeHeights[this.src] = this.height;
