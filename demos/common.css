@@ -3,6 +3,28 @@
   padding: 0;
   box-sizing: border-box;
 }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC,
+    Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei,
+    sans-serif;
+}
+h1 {
+  margin: 20px 0;
+}
+h2 {
+  margin: 10px 0;
+}
+p {
+  font-size: 14px;
+  line-height: 24px;
+}
+code:not(.hljs) {
+  font-size: 87.5%;
+  color: #e83e8c;
+  word-wrap: break-word;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+}
 .button {
   display: inline-block;
   line-height: 1;
@@ -23,12 +45,11 @@
   -ms-user-select: none;
   padding: 12px 20px;
   font-size: 14px;
-  border-radius: 4px;
+  /* border-radius: 4px; */
 }
 .button:hover {
-  color: #409eff;
-  border-color: #c6e2ff;
-  background-color: #ecf5ff;
+  color: #11a560;
+  border-color: #99cc99;
 }
 .container {
   margin-top: 20px;

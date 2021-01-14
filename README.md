@@ -5,9 +5,9 @@
 ## 功能
 
 - 不依赖 axios，自动监听 ajax 请求的发送和响应，防止重复请求
-- 提供 vue 指令，用于指定特定目标，及手动控制请求开始和结束的时机
+- 提供 vue 指令，可以指定特定目标，及手动控制请求开始和结束的时机
 - 提供请求开始和结束的钩子，可自定义请求目标样式，或搭配 element ui 等组件库/样式库使用
-- 内置为请求元素添加 loading 的功能，提高交互体验
+- 内置为请求元素添加 loading 或降低不透明度的功能，提高交互体验
 
 ## 使用
 
@@ -18,6 +18,8 @@
 ```js
 prr.setOptions({
   loading: true, // 是否添加 loading
+  loadingText: "", // 请求时的文字提示
+  // opacity: 1, // 设置元素请求时的不透明度
   selectors: ["button"], // 需要全局统一处理请求的选择器列表
   eventTypes: ["click"], // 需要全局统一处理请求的事件列表
   onRequest(target, options) {}, // 请求发起的钩子
@@ -31,10 +33,12 @@ prr.setOptions({
 
 ```html
 <!-- 手动设置请求开始和结束时机，可用于处理多个请求的情况 -->
-<button v-prr="loading" @click="request">按钮</button>
+<button v-prr="fetching" @click="request">按钮</button>
 
-<!-- 手动指定目标，可用于 selectors 不匹配的情况，添加 loading 修饰符表示请求时为元素添加 loading -->
-<div v-prr.loading @click="request" class="box">可点击区域</div>
+<!-- 手动指定目标，可用于 selectors 不匹配的情况 -->
+<div v-prr="{'loading': true, 'loadingText': '正在下载...'}" @click="download">
+  <div class="content">点击下载文件</div>
+</div>
 ```
 
 ### 方式 3：通过钩子函数自定义请求元素的样式，可搭配 element ui 等组件库使用
@@ -82,9 +86,10 @@ prr.setOptions({
 
 ## 限制
 
-- 当元素会触发连续请求时，比如点击按钮发起一个请求，请求完成后再通过拿到的数据去调另一个接口这种情况，目前只能通过 vue 指令来处理
+- 当元素会触发连续请求时，比如点击按钮发起一个请求，请求完成后再通过拿到的数据去调另一个接口这种情况，可以通过 `prr.start` + `prr.stop` 方法或通过 vue 指令来处理
 
 ## TODO
 
+- [ ] 完善 API 文档
+- [ ] 支持配置 loading 图标
 - [ ] 发布到 npm
-- [ ] 支持内置 loading 自定义，支持配置图标和文字

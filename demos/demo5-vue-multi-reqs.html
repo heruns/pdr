@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>demo2</title>
+    <link rel="stylesheet" href="./common.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- 指令手动设置请求开始和结束，可用于处理多个请求的情况 -->
+      <!-- code start:lang:html -->
+      <button
+        class="button"
+        v-prr="{'fetching': fetching, 'opacity': 0.5}"
+        @click="fetch"
+      >
+        是否请求中：{{fetching}}
+      </button>
+      <!-- code end -->
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
+    <script src="../prr.js"></script>
+    <script>
+      axios.defaults.baseURL =
+        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/prr";
+      // code start:lang:js
+      Vue.use(prr);
+      prr.setOptions({
+        loading: false,
+      });
+
+      new Vue({
+        el: "#app",
+        data: {
+          fetching: false,
+        },
+        methods: {
+          fetch() {
+            this.fetching = true;
+            axios
+              .get("/one-second")
+              .then(() => axios.get("/two-seconds"))
+              .then(() => {
+                this.fetching = false;
+              });
+          },
+        },
+      });
+      // code end
+    </script>
+  </body>
+</html>

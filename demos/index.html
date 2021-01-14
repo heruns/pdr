@@ -15,9 +15,7 @@
       }
       .iframe-demo {
         border: 1px solid #ebebeb;
-      }
-      .iframe-demo + .iframe-demo {
-        margin-top: 20px;
+        margin: 20px 0;
       }
       .iframe-demo-content {
         padding: 20px;
@@ -38,11 +36,50 @@
     </style>
   </head>
   <body>
+    <h1><code>prr</code> —— 防止用户多次点击发送重复请求的工具</h1>
     <div id="app">
-      <iframe-demo src="./demo1.html"></iframe-demo>
-      <iframe-demo src="./demo2.html"></iframe-demo>
-      <iframe-demo src="./demo3.html"></iframe-demo>
-      <iframe-demo src="./demo4.html"></iframe-demo>
+      <h2>1. 纯 js 使用，不依赖框架</h2>
+      <p>
+        最简单也是最推荐的方式，只需调用 <code>prr.setOptions</code> 设置好
+        <code>loading</code> 及 <code>opacity</code> 等参数，
+        当页面中由于用户点击某个按钮导致有请求发出时，<code>prr</code>
+        会监听到请求并为按钮设为不可点击状态，同时为按钮显示加载图标或降低透明度。
+      </p>
+      <iframe-demo src="./demo1-js-global.html"></iframe-demo>
+      <h2>2. 通过 Vue 指令使用</h2>
+      <p>
+        调用 <code>Vue.use(prr)</code> 后，将会在项目中注入
+        <code>v-prr</code>指令，该指令接收一个对象， 对象内容支持的参数与
+        <code>prr.setOptions</code>
+        一致，用于控制当前元素的具体状态。使用指令的另一个好处是 不受全局参数
+        <code>selectors</code> 的限制，可作用于任何元素上。
+      </p>
+      <iframe-demo src="./demo2-vue-directive"></iframe-demo>
+      <h2>3. 与第三方组件库如 element ui 配合使用</h2>
+      <p>
+        通过 <code>onRequest</code> 和
+        <code>onResponse</code>，我们可以很方便地在请求发起
+        和结束时对请求发起元素进行任何处理，所以搭配第三方组件库用起来也是非常简单。
+      </p>
+      <iframe-demo src="./demo3-element-ui.html"></iframe-demo>
+      <h2>4. 针对发起多个请求的情况</h2>
+      <p>
+        绝大多数情况下，我们点击元素触发的请求都是单个请求，但是有时调完一个接口接着又要
+        通过这个接口的数据去调下一个接口，这时候如果不做额外的处理，那么
+        <code>prr</code>
+        默认会在第一个请求结束的时候就认为请求已经完成了，从而移除加载动画或
+        恢复透明度。
+      </p>
+      <p>
+        在通过 js 调用时，我们可以通过 <code>prr.start</code> 和
+        <code>prr.stop</code> 两个方法解决这个问题。
+      </p>
+      <iframe-demo src="./demo4-js-multi-reqs.html"></iframe-demo>
+      <p>
+        在通过 Vue 指令调用时，我们可以通过给指令传一个
+        <code>fetching</code> 属性解决这个问题。
+      </p>
+      <iframe-demo src="./demo5-vue-multi-reqs.html"></iframe-demo>
     </div>
 
     <!-- iframe-demo 组件模板 -->

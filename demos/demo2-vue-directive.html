@@ -11,7 +11,7 @@
         height: 120px;
         cursor: pointer;
         background: #dcdfe6;
-        /* border: 1px solid #f00; */
+        /* outline: 1px solid #dcdfe6; */
       }
       .box-content {
         width: 100%;
@@ -23,18 +23,8 @@
   </head>
   <body>
     <div id="app">
-      <!-- code start:lang:html -->
-      <!-- 指令手动设置请求开始和结束，可用于处理多个请求的情况 -->
-      <div class="container">
-        <button
-          class="button"
-          v-prr="{'fetching': fetching, 'opacity': 0.5}"
-          @click="fetch"
-        >
-          是否请求中：{{fetching}}
-        </button>
-      </div>
       <!-- 指令手动指定目标，可用于 selectors 不匹配的情况 -->
+      <!-- code start:lang:html -->
       <div class="container">
         <div
           v-prr="{'loading': true, 'loadingText': '正在下载...'}"
@@ -65,29 +55,18 @@
         a.remove();
       }
       // code start:lang:js
+      Vue.use(prr);
       prr.setOptions({
         loading: false,
       });
-      Vue.use(prr);
 
       new Vue({
         el: "#app",
-        data: {
-          fetching: false,
-        },
         methods: {
-          fetch() {
-            this.fetching = true;
-            axios
-              .get("/one-second")
-              .then(() => axios.get("/two-seconds"))
-              .then(() => {
-                this.fetching = false;
-              });
-          },
           download() {
-            axios.get("/two-seconds");
-            // .then((res) => saveFile(res.data.desc, "prr.txt"));
+            axios
+              .get("/two-seconds")
+              .then((res) => saveFile(res.data.desc, "prr.txt"));
           },
         },
       });
