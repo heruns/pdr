@@ -19,9 +19,11 @@ p {
   line-height: 24px;
 }
 code:not(.hljs) {
-  font-size: 87.5%;
-  color: #e83e8c;
-  word-wrap: break-word;
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 6px;
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
 }
