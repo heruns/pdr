@@ -1,4 +1,9 @@
-(() => {
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.prr = factory());
+}(this, (function () { 'use strict';
+
   // 全局参数
   const globalOptions = {
     loading: true, // 是否添加 loading
@@ -145,7 +150,7 @@
 
   // 获取元素某个样式
   function getStyle(el, prop) {
-    return document.defaultView.getComputedStyle(el).prop;
+    return document.defaultView.getComputedStyle(el)[prop];
   }
   // 管理 loading
   const loadingManager = {
@@ -154,12 +159,12 @@
       const mask = document.createElement("div");
       mask.className = "prr-loading-mask";
       mask.innerHTML = `
-        <div class="prr-loading-spinner">
-          <svg class="prr-circular" viewBox="25 25 50 50">
-            <circle class="prr-path" cx="50" cy="50" r="20" fill="none"/>
-          </svg>
-        </div>
-        `;
+      <div class="prr-loading-spinner">
+        <svg class="prr-circular" viewBox="25 25 50 50">
+          <circle class="prr-path" cx="50" cy="50" r="20" fill="none"/>
+        </svg>
+      </div>
+      `;
       return mask;
     },
     getMaskStyle(parent) {
@@ -370,68 +375,68 @@
   function addStyle() {
     const primaryColor = "#11A560";
     const STYLE_TEXT = `
-        .prr-no-pointer-events {
-          pointer-events: none !important;
+      .prr-no-pointer-events {
+        pointer-events: none !important;
+      }
+      .prr-loading-parent-relative {
+        position: relative !important;
+      }
+      .prr-loading-mask {
+        position: absolute;
+        z-index: 2000;
+        background-color: rgba(255, 255, 255, .9);
+        margin: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transition: opacity 0.3s;
+      }
+      .prr-loading-spinner {
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        text-align: center;
+        position: absolute;
+      }
+      .prr-circular {
+        height: 42px;
+        width: 42px;
+        animation: prr-loading-rotate 2s linear infinite;
+      }
+      .prr-path {
+        animation: prr-loading-dash 1.5s ease-in-out infinite;
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: 0;
+        stroke-width: 2;
+        stroke: ${primaryColor};
+        stroke-linecap: round;
+      }
+      .prr-loading-text {
+        color: ${primaryColor};
+        margin: 3px 0;
+        font-size: 14px;
+      }
+      @keyframes prr-loading-rotate {
+        100% {
+          transform: rotate(360deg);
         }
-        .prr-loading-parent-relative {
-          position: relative !important;
-        }
-        .prr-loading-mask {
-          position: absolute;
-          z-index: 2000;
-          background-color: rgba(255, 255, 255, .9);
-          margin: 0;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          transition: opacity 0.3s;
-        }
-        .prr-loading-spinner {
-          top: 50%;
-          transform: translateY(-50%);
-          width: 100%;
-          text-align: center;
-          position: absolute;
-        }
-        .prr-circular {
-          height: 42px;
-          width: 42px;
-          animation: prr-loading-rotate 2s linear infinite;
-        }
-        .prr-path {
-          animation: prr-loading-dash 1.5s ease-in-out infinite;
-          stroke-dasharray: 90, 150;
+      }
+      @keyframes prr-loading-dash {
+        0% {
+          stroke-dasharray: 1, 200;
           stroke-dashoffset: 0;
-          stroke-width: 2;
-          stroke: ${primaryColor};
-          stroke-linecap: round;
         }
-        .prr-loading-text {
-          color: ${primaryColor};
-          margin: 3px 0;
-          font-size: 14px;
+        50% {
+          stroke-dasharray: 90, 150;
+          stroke-dashoffset: -40px;
         }
-        @keyframes prr-loading-rotate {
-          100% {
-            transform: rotate(360deg);
-          }
+        100% {
+          stroke-dasharray: 90, 150;
+          stroke-dashoffset: -120px;
         }
-        @keyframes prr-loading-dash {
-          0% {
-            stroke-dasharray: 1, 200;
-            stroke-dashoffset: 0;
-          }
-          50% {
-            stroke-dasharray: 90, 150;
-            stroke-dashoffset: -40px;
-          }
-          100% {
-            stroke-dasharray: 90, 150;
-            stroke-dashoffset: -120px;
-          }
-        }
-      `;
+      }
+    `;
     const style = document.createElement("style");
     style.appendChild(document.createTextNode(STYLE_TEXT));
     const head = document.getElementsByTagName("head")[0];
@@ -467,5 +472,7 @@
   }
 
   init();
-  window.prr = preventRepetitiveRequest;
-})();
+
+  return preventRepetitiveRequest;
+
+})));

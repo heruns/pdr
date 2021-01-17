@@ -13,6 +13,12 @@ const IframeDemo = {
     };
   },
   created() {
+    if (window.location.protocol === "file:" && !IframeDemo.alerted) {
+      alert(
+        "此 demo 无法直接通过 file 协议直接预览，请将文件放到本地或远程服务器中预览"
+      );
+      IframeDemo.alerted = true;
+    }
     this.getStorageHeight();
     this.getCode();
   },
@@ -57,6 +63,7 @@ const IframeDemo = {
       const lines2code = (lines) => {
         const prefixSpaceLengths = lines
           .map((line) => {
+            line = line.replace(/\s+$/, "");
             const spaces = /^(\s*)/.exec(line)[1] || "";
             return spaces.length;
           })

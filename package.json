@@ -1,0 +1,24 @@
+{
+  "name": "prr",
+  "version": "1.0.0",
+  "description": "防止用户多次点击发送重复请求的工具",
+  "main": "prr.js",
+  "scripts": {
+    "build": "rollup --config",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heruns/prr.git"
+  },
+  "keywords": [
+    "pdr",
+    "duplicated request"
+  ],
+  "author": "heruns",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heruns/prr/issues"
+  },
+  "homepage": "https://github.com/heruns/prr#readme"
+}

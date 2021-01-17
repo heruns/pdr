@@ -1,13 +1,15 @@
-# prr —— 防止用户多次点击发送重复请求的工具
+# pdr —— 防止用户多次点击发送重复请求的工具
 
-## demo 地址：[https://heruns.github.io/prr/demos/](https://heruns.github.io/prr/demos/)
+# pdr - a tool for preventing duplicated requests by user click
+
+## demo：[https://heruns.github.io/prr/demos/](https://heruns.github.io/prr/demos/)
 
 ## 功能
 
 - 不依赖 axios，自动监听 ajax 请求的发送和响应，防止重复请求
-- 提供 vue 指令，可以指定特定目标，及手动控制请求开始和结束的时机
 - 提供请求开始和结束的钩子，可自定义请求目标样式，或搭配 element ui 等组件库/样式库使用
 - 内置为请求元素添加 loading 或降低不透明度的功能，提高交互体验
+- 提供 vue 指令，可以指定特定目标，及手动控制请求开始和结束的时机
 
 ## 使用
 
@@ -91,5 +93,6 @@ prr.setOptions({
 ## TODO
 
 - [ ] 完善 API 文档
-- [ ] 支持配置 loading 图标
 - [ ] 发布到 npm
+- [ ] 单元测试
+- [ ] 支持配置 loading 图标
