@@ -12,7 +12,7 @@
       <!-- code start:lang:html -->
       <button
         class="button"
-        v-prr="{'fetching': fetching, 'opacity': 0.5}"
+        v-pdr="{'fetching': fetching, 'opacity': 0.5}"
         @click="fetch"
       >
         是否请求中：{{fetching}}
@@ -22,13 +22,13 @@
 
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
-    <script src="../prr.js"></script>
+    <script src="../pdr.js"></script>
     <script>
       axios.defaults.baseURL =
-        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/prr";
+        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/pdr";
       // code start:lang:js
-      Vue.use(prr);
-      prr.setOptions({
+      Vue.use(pdr);
+      pdr.setOptions({
         loading: false,
       });
 

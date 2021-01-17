@@ -1,8 +1,8 @@
 export default {
-  input: "prr-esm.js",
+  input: "pdr-esm.js",
   output: {
-    file: "prr.js",
+    file: "pdr.js",
     format: "umd",
-    name: "prr",
+    name: "pdr",
   },
 };

@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>demo3</title>
     <link rel="stylesheet" href="./common.css" />
-    <link href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.14.1/theme-chalk/index.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.14.1/theme-chalk/index.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="app">
@@ -18,12 +21,12 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.14.1/index.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
-    <script src="../prr.js"></script>
+    <script src="../pdr.js"></script>
     <script>
       axios.defaults.baseURL =
-        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/prr";
+        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/pdr";
       // code start:lang:js
-      prr.setOptions({
+      pdr.setOptions({
         loading: false,
         onRequest(target, options) {
           if (target.classList.contains("el-button")) {

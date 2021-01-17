@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.prr = factory());
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.pdr = factory());
 }(this, (function () { 'use strict';
 
   // 全局参数
@@ -157,11 +157,11 @@
     key: "loadingMask",
     createLoadingMask() {
       const mask = document.createElement("div");
-      mask.className = "prr-loading-mask";
+      mask.className = "pdr-loading-mask";
       mask.innerHTML = `
-      <div class="prr-loading-spinner">
-        <svg class="prr-circular" viewBox="25 25 50 50">
-          <circle class="prr-path" cx="50" cy="50" r="20" fill="none"/>
+      <div class="pdr-loading-spinner">
+        <svg class="pdr-circular" viewBox="25 25 50 50">
+          <circle class="pdr-path" cx="50" cy="50" r="20" fill="none"/>
         </svg>
       </div>
       `;
@@ -190,7 +190,7 @@
       const { width, height } = rect;
       const minSize = Math.min(width, height);
       if (minSize < 42) {
-        const circular = mask.querySelector(".prr-circular");
+        const circular = mask.querySelector(".pdr-circular");
         circular.style.width = minSize + "px";
         circular.style.height = minSize + "px";
       }
@@ -198,7 +198,7 @@
     addLoading(el, loadingText) {
       const position = getStyle(el, "position");
       if (position !== "absolute" && position !== "fixed") {
-        el.classList.add("prr-loading-parent-relative");
+        el.classList.add("pdr-loading-parent-relative");
       }
       const mask = this.createLoadingMask();
       const maskStyle = this.getMaskStyle(el);
@@ -208,7 +208,7 @@
       this.setCircularSize(el, mask);
       el.appendChild(mask);
       if (loadingText) {
-        const circular = mask.querySelector(".prr-circular");
+        const circular = mask.querySelector(".pdr-circular");
         // 如果空间不足就不显示文字
         if (mask.clientHeight - circular.clientHeight < 26) return;
         this.addLoadingText(mask, loadingText);
@@ -217,12 +217,12 @@
     },
     addLoadingText(mask, loadingText) {
       const text = document.createElement("div");
-      text.className = "prr-loading-text";
+      text.className = "pdr-loading-text";
       text.textContent = loadingText;
-      mask.querySelector(".prr-loading-spinner").appendChild(text);
+      mask.querySelector(".pdr-loading-spinner").appendChild(text);
     },
     removeLoading(el) {
-      el.classList.remove("prr-loading-parent-relative");
+      el.classList.remove("pdr-loading-parent-relative");
       const mask = elementDataStore.getData(el, this.key);
       if (mask) {
         el.removeChild(mask);
@@ -259,18 +259,18 @@
       }
     },
   };
-  // 获取元素 data-prr-* 属性中的值
+  // 获取元素 data-pdr-* 属性中的值
   function getDataOptions(el) {
     const options = {};
     const dataset = el.dataset;
-    if (dataset.prrOpacity) {
-      options.opacity = Number(dataset.prrOpacity);
+    if (dataset.pdrOpacity) {
+      options.opacity = Number(dataset.pdrOpacity);
     }
-    if (dataset.prrLoading) {
-      options.loading = dataset.prrLoading === "true";
+    if (dataset.pdrLoading) {
+      options.loading = dataset.pdrLoading === "true";
     }
-    if (dataset.prrLoadingText) {
-      options.loadingText = dataset.prrLoadingText;
+    if (dataset.pdrLoadingText) {
+      options.loadingText = dataset.pdrLoadingText;
     }
     return options;
   }
@@ -295,8 +295,8 @@
   }
   // 发起请求时的回调函数
   function onRequest(target, options) {
-    target.classList.add("prr-no-pointer-events");
-    target.classList.add("prr-fetching");
+    target.classList.add("pdr-no-pointer-events");
+    target.classList.add("pdr-fetching");
     if (options.loading) {
       loadingManager.addLoading(target, options.loadingText);
     }
@@ -307,8 +307,8 @@
   }
   // 请求结束时的回调函数
   function onResponse(target, options) {
-    target.classList.remove("prr-no-pointer-events");
-    target.classList.remove("prr-fetching");
+    target.classList.remove("pdr-no-pointer-events");
+    target.classList.remove("pdr-fetching");
     loadingManager.removeLoading(target);
     opacityManager.restoreOpacity(target);
     globalOptions.onResponse.call(null, target, options);
@@ -375,13 +375,13 @@
   function addStyle() {
     const primaryColor = "#11A560";
     const STYLE_TEXT = `
-      .prr-no-pointer-events {
+      .pdr-no-pointer-events {
         pointer-events: none !important;
       }
-      .prr-loading-parent-relative {
+      .pdr-loading-parent-relative {
         position: relative !important;
       }
-      .prr-loading-mask {
+      .pdr-loading-mask {
         position: absolute;
         z-index: 2000;
         background-color: rgba(255, 255, 255, .9);
@@ -392,37 +392,37 @@
         left: 0;
         transition: opacity 0.3s;
       }
-      .prr-loading-spinner {
+      .pdr-loading-spinner {
         top: 50%;
         transform: translateY(-50%);
         width: 100%;
         text-align: center;
         position: absolute;
       }
-      .prr-circular {
+      .pdr-circular {
         height: 42px;
         width: 42px;
-        animation: prr-loading-rotate 2s linear infinite;
+        animation: pdr-loading-rotate 2s linear infinite;
       }
-      .prr-path {
-        animation: prr-loading-dash 1.5s ease-in-out infinite;
+      .pdr-path {
+        animation: pdr-loading-dash 1.5s ease-in-out infinite;
         stroke-dasharray: 90, 150;
         stroke-dashoffset: 0;
         stroke-width: 2;
         stroke: ${primaryColor};
         stroke-linecap: round;
       }
-      .prr-loading-text {
+      .pdr-loading-text {
         color: ${primaryColor};
         margin: 3px 0;
         font-size: 14px;
       }
-      @keyframes prr-loading-rotate {
+      @keyframes pdr-loading-rotate {
         100% {
           transform: rotate(360deg);
         }
       }
-      @keyframes prr-loading-dash {
+      @keyframes pdr-loading-dash {
         0% {
           stroke-dasharray: 1, 200;
           stroke-dashoffset: 0;
@@ -444,7 +444,7 @@
   }
 
   // 暴露给外部使用的对象
-  const preventRepetitiveRequest = {
+  const preventDuplicatedRequest = {
     // 是否已通过 Vue.use 注册该工具
     _installed: false,
     // 设置参数
@@ -461,7 +461,7 @@
     // 通过 Vue.use 使用该工具时调用
     install(Vue) {
       if (this._installed) return;
-      Vue.directive("prr", directive);
+      Vue.directive("pdr", directive);
       this._installed = true;
     },
   };
@@ -473,6 +473,6 @@
 
   init();
 
-  return preventRepetitiveRequest;
+  return preventDuplicatedRequest;
 
 })));

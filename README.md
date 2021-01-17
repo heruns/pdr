@@ -2,7 +2,7 @@
 
 # pdr - a tool for preventing duplicated requests by user click
 
-## demo：[https://heruns.github.io/prr/demos/](https://heruns.github.io/prr/demos/)
+## demo：[https://heruns.github.io/pdr/demos/](https://heruns.github.io/pdr/demos/)
 
 ## 功能
 
@@ -15,10 +15,10 @@
 
 ### 方式 1：全局监听请求
 
-这种方式只需直接在页面中加载 [prr.js](./prr.js) 即可，加载后会在 `window` 对象上挂载一个 `prr` 对象，可通过 `prr.setOptions` 修改默认参数
+这种方式只需直接在页面中加载 [pdr.js](./pdr.js) 即可，加载后会在 `window` 对象上挂载一个 `pdr` 对象，可通过 `pdr.setOptions` 修改默认参数
 
 ```js
-prr.setOptions({
+pdr.setOptions({
   loading: true, // 是否添加 loading
   loadingText: "", // 请求时的文字提示
   // opacity: 1, // 设置元素请求时的不透明度
@@ -31,14 +31,14 @@ prr.setOptions({
 
 ### 方式 2：vue 指令指定请求元素和时机
 
-首先通过 `Vue.use(prr)` 注册 `v-prr` 指令，注册后使用方式如下：
+首先通过 `Vue.use(pdr)` 注册 `v-pdr` 指令，注册后使用方式如下：
 
 ```html
 <!-- 手动设置请求开始和结束时机，可用于处理多个请求的情况 -->
-<button v-prr="fetching" @click="request">按钮</button>
+<button v-pdr="fetching" @click="request">按钮</button>
 
 <!-- 手动指定目标，可用于 selectors 不匹配的情况 -->
-<div v-prr="{'loading': true, 'loadingText': '正在下载...'}" @click="download">
+<div v-pdr="{'loading': true, 'loadingText': '正在下载...'}" @click="download">
   <div class="content">点击下载文件</div>
 </div>
 ```
@@ -48,7 +48,7 @@ prr.setOptions({
 JS:
 
 ```js
-prr.setOptions({
+pdr.setOptions({
   loading: false,
   onRequest(target, options) {
     // 请求开始，添加 loading
@@ -88,7 +88,7 @@ prr.setOptions({
 
 ## 限制
 
-- 当元素会触发连续请求时，比如点击按钮发起一个请求，请求完成后再通过拿到的数据去调另一个接口这种情况，可以通过 `prr.start` + `prr.stop` 方法或通过 vue 指令来处理
+- 当元素会触发连续请求时，比如点击按钮发起一个请求，请求完成后再通过拿到的数据去调另一个接口这种情况，可以通过 `pdr.start` + `pdr.stop` 方法或通过 vue 指令来处理
 
 ## TODO
 

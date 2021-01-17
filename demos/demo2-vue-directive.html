@@ -27,7 +27,7 @@
       <!-- code start:lang:html -->
       <div class="container">
         <div
-          v-prr="{'loading': true, 'loadingText': '正在下载...'}"
+          v-pdr="{'loading': true, 'loadingText': '正在下载...'}"
           @click="download"
           class="box"
         >
@@ -39,10 +39,10 @@
 
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
-    <script src="../prr.js"></script>
+    <script src="../pdr.js"></script>
     <script>
       axios.defaults.baseURL =
-        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/prr";
+        "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/pdr";
       // 保存文件
       function saveFile(data, fileName) {
         const fileBlob = new Blob([data]); // 创建一个Blob对象
@@ -55,8 +55,8 @@
         a.remove();
       }
       // code start:lang:js
-      Vue.use(prr);
-      prr.setOptions({
+      Vue.use(pdr);
+      pdr.setOptions({
         loading: false,
       });
 
@@ -66,7 +66,7 @@
           download() {
             axios
               .get("/two-seconds")
-              .then((res) => saveFile(res.data.desc, "prr.txt"));
+              .then((res) => saveFile(res.data.desc, "pdr.txt"));
           },
         },
       });
