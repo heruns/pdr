@@ -29,6 +29,7 @@
       pdr.setOptions({
         loading: false,
         onRequest(target, options) {
+          // 请求发起时，为按钮添加 loading
           if (target.classList.contains("el-button")) {
             target.classList.add("is-loading");
             const loading = document.createElement("i");
@@ -39,6 +40,7 @@
             );
           }
         },
+        // 请求结束时，为按钮移除 loading
         onResponse(target, options) {
           if (target.classList.contains("el-button")) {
             target.classList.remove("is-loading");
@@ -50,9 +52,6 @@
 
       new Vue({
         el: "#app",
-        data: {
-          loading: false,
-        },
         methods: {
           fetch() {
             axios.get("/two-seconds");

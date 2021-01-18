@@ -11,19 +11,29 @@
 - 内置为请求元素添加 loading 或降低不透明度的功能，提高交互体验
 - 提供 vue 指令，可以指定特定目标，及手动控制请求开始和结束的时机
 
+## 安装
+
+1. 通过 npm 安装
+
+在项目根目录运行命令 `npm install pdrjs`，然后在页面中通过 `import pdr from 'pdrjs'` 引入即可
+
+2. 通过 `script` 标签引用
+
+下载文件 [https://github.com/heruns/pdr/blob/master/pdr.js](https://github.com/heruns/pdr/blob/master/pdr.js)，放到项目中，然后通过 `script` 标签引用即可，文件加载后会在 `window` 对象上挂载一个 `pdr` 对象
+
 ## 使用
 
 ### 方式 1：全局监听请求
 
-这种方式只需直接在页面中加载 [pdr.js](./pdr.js) 即可，加载后会在 `window` 对象上挂载一个 `pdr` 对象，可通过 `pdr.setOptions` 修改默认参数
+通过 `pdr.setOptions` 修改默认参数，即可在用户操作触发请求时自动处理事件目标，将目标设为禁用状态，并且降低不透明度或显示 loading
 
 ```js
 pdr.setOptions({
-  loading: true, // 是否添加 loading
-  loadingText: "", // 请求时的文字提示
-  // opacity: 1, // 设置元素请求时的不透明度
-  selectors: ["button"], // 需要全局统一处理请求的选择器列表
-  eventTypes: ["click"], // 需要全局统一处理请求的事件列表
+  loading: true, // 是否添加 loading，默认为 true
+  loadingText: "", // 请求时的文字提示，默认为 ""
+  // opacity: 1, // 设置元素请求时的不透明度，0-1，默认不设置
+  selectors: ["button"], // 需要全局统一处理请求的选择器列表，默认只处理按钮元素
+  eventTypes: ["click"], // 需要全局统一处理请求的事件列表，默认只处理点击事件
   onRequest(target, options) {}, // 请求发起的钩子
   onResponse(target, options) {}, // 请求结束的钩子
 });
@@ -93,6 +103,6 @@ pdr.setOptions({
 ## TODO
 
 - [ ] 完善 API 文档
-- [ ] 发布到 npm
+- [x] 发布到 npm
 - [ ] 单元测试
-- [ ] 支持配置 loading 图标
+- [ ] 支持配置 loading 图标和颜色

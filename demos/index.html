@@ -40,7 +40,7 @@
   <body>
     <h1><code>pdr</code> —— 防止用户多次点击发送重复请求的工具</h1>
     <div id="app">
-      <h2>1. 纯 js 使用，不依赖框架</h2>
+      <h2>1. 纯 js 全局使用，不依赖框架</h2>
       <p>
         最简单也是最推荐的方式，只需调用 <code>pdr.setOptions</code> 设置好
         <code>loading</code> 及 <code>opacity</code> 等参数，
@@ -56,7 +56,7 @@
         一致，用于控制当前元素的具体状态。使用指令的另一个好处是 不受全局参数
         <code>selectors</code> 的限制，可作用于任何元素上。
       </p>
-      <iframe-demo src="./demo2-vue-directive"></iframe-demo>
+      <iframe-demo src="./demo2-vue-directive.html"></iframe-demo>
       <h2>3. 与第三方组件库如 element ui 配合使用</h2>
       <p>
         通过 <code>onRequest</code> 和
@@ -115,7 +115,7 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.4.1/languages/javascript.min.js"></script>
-    <script src="../pdr.js"></script>
+    <!-- <script src="../pdr.js"></script> -->
     <script src="./index.js"></script>
   </body>
 </html>

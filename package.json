@@ -5,6 +5,7 @@
   "main": "pdr-esm.js",
   "scripts": {
     "build": "rollup --config",
+    "dev": "rollup --watch --config",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +21,6 @@
   "bugs": {
     "url": "https://github.com/heruns/pdr/issues"
   },
-  "homepage": "https://github.com/heruns/pdr#readme"
+  "homepage": "https://github.com/heruns/pdr#readme",
+  "devDependencies": {}
 }

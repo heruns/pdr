@@ -23,10 +23,11 @@
         "https://www.fastmock.site/mock/a54aeb751600c404e896d70bb29468c7/pdr";
       // code start:lang:js
       pdr.setOptions({
-        loading: false,
-        opacity: 0.5,
+        loading: false, // 不显示 loading
+        opacity: 0.5, // 请求时将不透明度设为 0.5
       });
 
+      // 监听按钮点击事件，发送请求
       document.querySelector(".button").addEventListener("click", function (e) {
         axios.get("/two-seconds");
       });

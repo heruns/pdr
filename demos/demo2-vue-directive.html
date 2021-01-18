@@ -24,15 +24,14 @@
   <body>
     <div id="app">
       <!-- 指令手动指定目标，可用于 selectors 不匹配的情况 -->
+      <!-- FIXME: loading 样式需完善，当父元素有 margin 值时样式会有点问题 -->
       <!-- code start:lang:html -->
-      <div class="container">
-        <div
-          v-pdr="{'loading': true, 'loadingText': '正在下载...'}"
-          @click="download"
-          class="box"
-        >
-          <div class="box-content">点击下载文件</div>
-        </div>
+      <div
+        v-pdr="{'loading': true, 'loadingText': '正在下载...'}"
+        @click="download"
+        class="box"
+      >
+        <div class="box-content">点击下载文件</div>
       </div>
       <!-- code end -->
     </div>
