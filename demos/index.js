@@ -1,3 +1,5 @@
+const isInWechat = /MicroMessenger/i.test(window.navigator.userAgent);
+
 // demo 展示组件
 const IframeDemo = {
   name: "iframe-demo",
@@ -25,9 +27,12 @@ const IframeDemo = {
   mounted() {
     // 加载完成后将当前 iframe 高度保存到 localStorage 中
     this.$refs.iframe.addEventListener("load", (e) => {
-      const bodyHeight = this.$refs.iframe.contentDocument.body.scrollHeight;
-      this.height = bodyHeight + 20 + "px";
-      this.setStorageHeight();
+      setTimeout(() => {
+        const body = this.$refs.iframe.contentDocument.body;
+        const bodyHeight = isInWechat ? body.clientHeight : body.scrollHeight;
+        this.height = bodyHeight + 10 + "px";
+        this.setStorageHeight();
+      }, 100);
     });
   },
   methods: {
