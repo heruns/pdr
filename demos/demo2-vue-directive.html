@@ -65,7 +65,10 @@
           download() {
             axios
               .get("/two-seconds")
-              .then((res) => saveFile(res.data.desc, "pdr.txt"));
+              .then((res) => {
+                // 假装在这里执行了下载操作
+                // saveFile(res.data.desc, "pdr.txt")
+              });
           },
         },
       });

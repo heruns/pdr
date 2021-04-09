@@ -16,13 +16,10 @@ const IframeDemo = {
   },
   created() {
     if (window.location.protocol === "file:" && !IframeDemo.alerted) {
-      alert(
-        "此 demo 无法直接通过 file 协议直接预览，请将文件放到本地或远程服务器中预览"
-      );
+      alert("此 demo 无法直接通过 file 协议直接预览，请将文件放到本地或远程服务器中预览");
       IframeDemo.alerted = true;
     }
     this.getStorageHeight();
-    this.getCode();
   },
   mounted() {
     // 加载完成后将当前 iframe 高度保存到 localStorage 中
@@ -111,6 +108,10 @@ const IframeDemo = {
     },
     toggleShow() {
       this.showCode = !this.showCode;
+      // 点击查看代码时，如果还没加载代码片段，先加载
+      if (!this.snippets.length) {
+        this.getCode()
+      }
     },
     // 获取 localStorage 中保存的所有 iframe 高度
     getStorageHeights() {
@@ -136,6 +137,11 @@ const IframeDemo = {
 
 // 示例代码
 Vue.use(hljs.vuePlugin);
+pdr.setOptions({
+  opacity: 0.5,
+  loading: false,
+  selectors: ['.toggle-button']
+})
 new Vue({
   el: "#app",
   components: {

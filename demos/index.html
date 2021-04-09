@@ -40,12 +40,12 @@
   <body>
     <h1><code>pdr</code> —— 防止用户多次点击发送重复请求的工具</h1>
     <div id="app">
-      <h2>1. 纯 js 全局使用，不依赖框架</h2>
+      <h2>1. 原生 js 全局使用，不依赖框架</h2>
       <p>
         最简单也是最推荐的方式，只需调用 <code>pdr.setOptions</code> 设置好
         <code>loading</code> 及 <code>opacity</code> 等参数，
         当页面中由于用户点击某个按钮导致有请求发出时，<code>pdr</code>
-        会监听到请求并为按钮设为不可点击状态，同时为按钮显示加载图标或降低透明度。
+        会监听到请求并将按钮设为不可点击状态，同时为按钮显示加载图标或降低透明度。
       </p>
       <iframe-demo src="./demo1-js-global.html"></iframe-demo>
       <h2>2. 通过 Vue 指令使用</h2>
@@ -53,7 +53,7 @@
         调用 <code>Vue.use(pdr)</code> 后，将会在项目中注入
         <code>v-pdr</code>指令，该指令接收一个对象， 对象内容支持的参数与
         <code>pdr.setOptions</code>
-        一致，用于控制当前元素的具体状态。使用指令的另一个好处是 不受全局参数
+        一致，用于控制当前元素的具体状态。使用指令的另一个好处是不受全局参数
         <code>selectors</code> 的限制，可作用于任何元素上。
       </p>
       <iframe-demo src="./demo2-vue-directive.html"></iframe-demo>
@@ -115,7 +115,7 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.4.1/languages/javascript.min.js"></script>
-    <!-- <script src="../pdr.js"></script> -->
+    <script src="../pdr.js"></script>
     <script src="./index.js"></script>
   </body>
 </html>
